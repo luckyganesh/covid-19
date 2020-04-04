@@ -3,7 +3,7 @@ const {processData} = require('./src/logic')
 
 const options = {
   hostname: "api.covid19india.org",
-  path: "/state_district_wise.json",
+  path: "/v2/state_district_wise.json",
   method: "GET"
 }
 
