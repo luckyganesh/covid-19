@@ -45,9 +45,20 @@ const showDistrictsTable = function (data) {
   console.log(table(tableData))
 }
 
-const processData = function (data) {
-  showStatesTable(data)
-  showDistrictsTable(data)
+const showTotalTable = function(data){
+  const tableData = []
+  tableData.push(["Total", "Analysis"])
+  const analysisFields = ["confirmed", "active", "recovered" , "deaths"];
+  analysisFields.forEach(x => {
+    tableData.push([x, data[x]])
+  })
+  console.log(table(tableData))
+}
+
+const processData = function (totalData, districtData) {
+  showTotalTable(totalData["statewise"].find(x => x["state"] == "Total"))
+  showStatesTable(districtData)
+  showDistrictsTable(districtData)
 }
 
 module.exports = {

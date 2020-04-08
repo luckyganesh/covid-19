@@ -1,13 +1,19 @@
 const https = require('https')
 const {processData} = require('./src/logic')
 
-const options = {
+const DISTRICT_URL_OPTIONS = {
   hostname: "api.covid19india.org",
   path: "/v2/state_district_wise.json",
   method: "GET"
 }
 
-const req = https.request(options, res => {
+const TOTAL_COUNT_URL_OPTIONS = {
+  hostname: "api.covid19india.org",
+  path: "/data.json",
+  method: "GET"
+}
+
+const parseAndProcess = function(totalData, res) {
   let data = '';
 
   res.on('data', d => {
@@ -15,12 +21,25 @@ const req = https.request(options, res => {
   })
 
   res.on('end', () => {
-    processData(JSON.parse(data))
+    processData(totalData,JSON.parse(data))
   })
-})
+}
 
-req.on('error', error => {
-  console.log(error);
-})
+const main = function(){
+  const totalDataRequest = https.request(TOTAL_COUNT_URL_OPTIONS,(res) =>{
+    let data = '';
 
-req.end();
+    res.on('data', d => {
+      data += d
+    })
+
+    res.on('end', () => {
+      const districtDataReq = https.request(DISTRICT_URL_OPTIONS, parseAndProcess.bind(null,JSON.parse(data)))
+      districtDataReq.end();
+    })
+  })
+  
+  totalDataRequest.end();
+}
+
+main()
