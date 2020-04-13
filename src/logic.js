@@ -1,17 +1,7 @@
 const { table } = require('table')
-
-const districtsToMonitor = [
-  "East Godavari",
-  "Coimbatore",
-  "Pune",
-  "Mumbai"
-]
-
-const statesToMonitor = [
-  "Andhra Pradesh",
-  "Tamil Nadu",
-  "Maharashtra"
-]
+const configuration = require('../config.json');
+const districtsToMonitor = configuration.districts;
+const statesToMonitor = configuration.states;
 
 const countConfirmed = function (districtsData) {
   return districtsData.reduce((count, dirstrictData) => {
@@ -19,14 +9,16 @@ const countConfirmed = function (districtsData) {
   }, 0)
 }
 
+const provide = function(data,element) {
+  return [element, data[element]]
+}
+
 const showStatesTable = function (data) {
   const statesData = {}
   data.forEach(({ state, districtData }) => {
     statesData[state] = countConfirmed(districtData)
   })
-  const tableData = statesToMonitor.map(state => {
-    return [state, statesData[state]]
-  })
+  const tableData = configuration.states.map(provide.bind(null,statesData))
   tableData.unshift(["State", "confirmed"])
   console.log(table(tableData))
 }
@@ -38,9 +30,7 @@ const showDistrictsTable = function (data) {
       districtsData[district] = (districtData[district] || 0) + confirmed
     })
   })
-  const tableData = districtsToMonitor.map(district => {
-    return [district, districtsData[district]]
-  })
+  const tableData = configuration.districts.map(provide.bind(null,districtsData))
   tableData.unshift(["District", "Confirmed"])
   console.log(table(tableData))
 }

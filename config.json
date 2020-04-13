@@ -1,0 +1,13 @@
+{
+  "states" : [
+    "Andhra Pradesh",
+    "Tamil Nadu",
+    "Maharashtra"
+  ],
+  "districts" : [
+    "East Godavari",
+    "Coimbatore",
+    "Pune",
+    "Mumbai"
+  ]
+}
